@@ -1,9 +1,9 @@
 import sublime, sublime_plugin
 import sys
 import os
-
-sys.path.append(os.path.join(os.path.dirname(__file__), ".\\CppHeaderParser-2.4.3"))
-sys.path.append(os.path.join(os.path.dirname(__file__), ".\\ply-3.4\\"))
+import ntpath
+sys.path.append(os.path.join(os.path.dirname(__file__), ".", "CppHeaderParser-2.4.3"))
+sys.path.append(os.path.join(os.path.dirname(__file__), ".", "ply-3.4"))
 import CppHeaderParser
 
 
@@ -55,13 +55,13 @@ class CreateImpCommand(sublime_plugin.WindowCommand):
 	def insertFcns(self, view, header_name, fcnList):
 		edit = view.begin_edit();
 		apos = view.sel()[0].begin()
-		view.insert (edit, apos, 'import "' + header_name + '"')
+		view.insert (edit, apos, 'import "' + ntpath.basename(header_name) + '"')
 		for fcn in fcnList:
 			pos = view.sel()[0].begin()
 			view.insert(edit, pos, "\n\n" + fcn)
 		view.end_edit(edit)
 		
-	def run(self, header_name):
+	def run(self, header_name, class_name):
 		view = self.window.new_file()
 		self.window = sublime.active_window()
-		self.insertFcns(view, header_name, self.getData(header_name, "Hi"))
+		self.insertFcns(view, header_name, self.getData(header_name, class_name))

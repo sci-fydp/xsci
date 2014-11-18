@@ -12,3 +12,10 @@ window.run_command("new_header", {"header_name" : "hi"})
 
 view.run_command("create_fcn", {"args" : {"parameters" : [{'line_number': 22, 'constant': 0, 'name': 'v1', 'reference': 0, 'type': 'int', 'static': 0, 'pointer': 0, 'desc': 'Variable 1'}], "virtual": False, "destructor": False, "template": False, "friend": False, "static": False, "rtnType": "int", "const": False, "inline": False, 'destructor': False, 'constructor': False, 'name': 'fcnName', "proto" : False, "pureVirtual" : False}     })
 
+- Insert text
+
+view.run_command("hard_insert", {"text" : "text to insert here (at cursor) loc"})
+
+C:/Users/Ornalth/AppData/Roaming/Sublime\ Text\ 2/Packages/sci
+
+https://pypi.python.org/pypi/CppHeaderParser/

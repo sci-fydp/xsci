@@ -6,7 +6,7 @@ class NewHeaderCommand(sublime_plugin.WindowCommand):
 
     def insertTemplate(self, view, template):
         edit = view.begin_edit();
-        str = "\nclass " + template + " {\n\t\n}"
+        str = "#ifndef __" + template + "__H\n#define __" + template + "__H\n\nclass " + template + " {\n\t\n} \n#endif //__" + template + "__H"
         #index = str.find("\t")
         view.insert(edit, 0, str)
         #view.show_at_center(index)

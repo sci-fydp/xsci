@@ -80,7 +80,7 @@ string acceptConsoleInput()
 {
 	getConsoleControl();
 	string str;
-	cin >> str;
+	getline(cin , str);
 	return str;
 }
 
@@ -125,6 +125,7 @@ void sendText(string str)
 	for (unsigned int i = 0; i < str.length(); i++)
 	{
 		char c = str.at(i);
+		/*
 		memset(input, 0, sizeof(input));
 		input[0].type = INPUT_KEYBOARD;
 		input[0].ki.wVk = VkKeyScan(c);
@@ -135,6 +136,20 @@ void sendText(string str)
 		input[0].ki.wVk = VkKeyScan(c);
 		input[0].ki.dwFlags = KEYEVENTF_KEYUP;
 		SendInput(1, input, sizeof(INPUT));
+		*/
+
+		memset(input, 0, sizeof(input));
+		input[0].type = INPUT_KEYBOARD;
+		input[0].ki.wScan = c;
+		input[0].ki.dwFlags = KEYEVENTF_UNICODE;
+		SendInput(1, input, sizeof(INPUT));
+
+		memset(input, 0, sizeof(input));
+		input[0].type = INPUT_KEYBOARD;
+		input[0].ki.wScan = c;
+		input[0].ki.dwFlags = KEYEVENTF_KEYUP | KEYEVENTF_UNICODE;
+		SendInput(1, input, sizeof(INPUT));
+
 	}
 	memset(input, 0, sizeof(input));
 	input[0].type = INPUT_KEYBOARD;

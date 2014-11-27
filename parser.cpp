@@ -7,7 +7,7 @@
 
 using namespace std;
 
-#define SUBLIME_LOCATION ""//INSERT HERE
+#define DEFAULT_SUBLIME_LOCATION "C:/Program Files/Sublime Text 2/sublime_text.exe"
 
 HWND sublimeWindow;
 HWND consoleWindow;
@@ -66,23 +66,6 @@ void NewSetForegroundWindow(HWND hWnd)
 void getSublimeControl()
 {
 	SetForegroundWindowInternal(sublimeWindow);
-	//NewSetForegroundWindow(sublimeWindow);
-	//int ans = SetForegroundWindow(sublimeWindow);
-	//if (ans == 0)
-	//{
-	//	cout << "DANG1" << endl;
-	//}
-	/*
-	
-	HWND ans = NULL;
-	ans = SetActiveWindow(sublimeWindow);
-
-	if (ans == NULL)
-	{
-		DWORD word = GetLastError();
-		cout << "FUK" << word;
-	}
-	*/
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
@@ -90,19 +73,6 @@ void getConsoleControl()
 {
 	
 	int ans = SetForegroundWindow(consoleWindow);
-	if (ans == 0)
-	{
-		cout << "DANG2" << endl;
-	}
-	/*
-	HWND ans = NULL;
-	ans = SetActiveWindow(consoleWindow);
-	if (ans == NULL)
-	{
-		DWORD word = GetLastError();
-		cout << "FUK" << word;
-	}
-	*/
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
@@ -178,7 +148,7 @@ void sendText(string str)
 	SendInput(1, input, sizeof(INPUT));
 }
 
-bool openSublime()
+bool openSublime(string sublimeLocation)
 {
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
@@ -187,7 +157,9 @@ bool openSublime()
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
 	// Start the child process. 
-	LPTSTR szCmdline = _tcsdup(TEXT(SUBLIME_LOCATION));
+	LPSTR str = const_cast<char *>(sublimeLocation.c_str());
+	std::wstring widestr = std::wstring(sublimeLocation.begin(), sublimeLocation.end());
+	LPTSTR szCmdline = _tcsdup(widestr.c_str());
 	bool result = CreateProcess(NULL,   // No module name (use command line)
 		szCmdline,        // Command line
 		NULL,           // Process handle not inheritable
@@ -199,15 +171,22 @@ bool openSublime()
 		&si,            // Pointer to STARTUPINFO structure
 		&pi)           // Pointer to PROCESS_INFORMATION structure
 		;
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	std::this_thread::sleep_for(std::chrono::seconds(5));
 	return result;
 }
 
 
-int main()
+int main(int argc, char **argv)
 {
+	string SUBLIME_LOCATION = DEFAULT_SUBLIME_LOCATION;
+
+	if (argc > 1)
+	{
+		SUBLIME_LOCATION = argv[1];
+	}
+
 	consoleWindow = GetConsoleWindow();
-	openSublime();
+	openSublime(SUBLIME_LOCATION);
 	sublimeWindow = GetForegroundWindow();
 	cout << sublimeWindow << endl;
 	openSublimeConsole();
